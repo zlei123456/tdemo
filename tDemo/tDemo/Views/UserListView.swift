@@ -3,6 +3,7 @@ import SwiftUI
 struct UserListView: View {
     let title: String
     let users: [User]
+    @State private var followingUsers: Set<UUID> = []
     
     var body: some View {
         List {
@@ -28,12 +29,14 @@ struct UserListView: View {
                     
                     Spacer()
                     
-                    Button(action: {}) {
-                        Text("关注")
+                    Button(action: {
+                        toggleFollow(user)
+                    }) {
+                        Text(followingUsers.contains(user.id) ? "已关注" : "关注")
                             .font(.caption)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 6)
-                            .background(Color.blue)
+                            .background(followingUsers.contains(user.id) ? Color.gray : Color.blue)
                             .foregroundColor(.white)
                             .cornerRadius(16)
                     }
@@ -43,5 +46,13 @@ struct UserListView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    private func toggleFollow(_ user: User) {
+        if followingUsers.contains(user.id) {
+            followingUsers.remove(user.id)
+        } else {
+            followingUsers.insert(user.id)
+        }
     }
 }
